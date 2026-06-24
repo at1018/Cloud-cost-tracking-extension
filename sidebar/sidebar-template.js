@@ -73,6 +73,37 @@ export const sidebarTemplate = `
           <strong id="cct-yearly-cost">$0.00</strong>
         </div>
       </div>
+      <div class="cct-breakdown-card">
+        <h3>Cost Breakdown</h3>
+        <div class="cct-summary-row">
+          <span>Estimated Monthly Cost</span>
+          <strong id="cct-est-monthly">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span>Estimated Yearly Cost</span>
+          <strong id="cct-est-yearly">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span>Savings vs On-Demand</span>
+          <strong id="cct-savings">$0.00 (0%)</strong>
+        </div>
+      </div>
+
+      <div class="cct-compare-card">
+        <h3>Compare Instances</h3>
+        <div class="cct-field-group">
+          <label for="cct-compare-instance">Compare Instance Type</label>
+          <select id="cct-compare-instance" class="cct-select"></select>
+        </div>
+        <div class="cct-summary-row">
+          <span>Monthly Savings</span>
+          <strong id="cct-compare-monthly">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span>Yearly Savings</span>
+          <strong id="cct-compare-yearly">$0.00</strong>
+        </div>
+      </div>
     </div>
   </div>
   <button id="cloud-cost-tracker-launcher" class="cct-launcher">Cloud Cost Tracker</button>

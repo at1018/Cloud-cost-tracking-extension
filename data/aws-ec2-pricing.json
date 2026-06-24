@@ -1,0 +1,8 @@
+{
+  "t3.micro": {"us-east-1": 0.0104, "us-west-2": 0.011, "eu-west-1": 0.012, "ap-south-1": 0.013, "ap-southeast-1": 0.0125},
+  "t3.small": {"us-east-1": 0.0208, "us-west-2": 0.022, "eu-west-1": 0.024, "ap-south-1": 0.026, "ap-southeast-1": 0.025},
+  "t3.medium": {"us-east-1": 0.0416, "us-west-2": 0.044, "eu-west-1": 0.048, "ap-south-1": 0.052, "ap-southeast-1": 0.05},
+  "t4g.micro": {"us-east-1": 0.0084, "us-west-2": 0.009, "eu-west-1": 0.0095, "ap-south-1": 0.010, "ap-southeast-1": 0.0098},
+  "m6i.large": {"us-east-1": 0.077, "us-west-2": 0.081, "eu-west-1": 0.085, "ap-south-1": 0.09, "ap-southeast-1": 0.088},
+  "c7i.large": {"us-east-1": 0.129, "us-west-2": 0.135, "eu-west-1": 0.142, "ap-south-1": 0.148, "ap-southeast-1": 0.145}
+}

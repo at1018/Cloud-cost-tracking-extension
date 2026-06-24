@@ -1,5 +1,5 @@
 import { sidebarTemplate } from './sidebar-template.js';
-import { getHourlyCost, calculateDailyCost, calculateMonthlyCost, calculateYearlyCost } from './pricing-engine.js';
+import pricingService, { OS_MULTIPLIERS, PRICING_MODEL_MULTIPLIERS } from './pricing-service.js';
 import { buildInstanceOptions, getSavedSelections, saveSelections, formatCurrency } from '../utils/helpers.js';
 import { DEFAULT_SELECTIONS, INSTANCE_TYPES } from '../utils/constants.js';
 
@@ -36,22 +36,35 @@ if (!existingSidebar && !existingLauncher) {
   buildInstanceOptions(instanceTypeSelect, INSTANCE_TYPES);
   instanceTypeSelect.value = selections.instanceType || DEFAULT_SELECTIONS.instanceType;
 
-  function updateCosts() {
+  async function updateCosts() {
     const provider = providerSelect.value;
     const service = serviceSelect.value;
     const instanceType = instanceTypeSelect.value;
+    const region = regionSelect.value;
+    const os = osSelect.value;
+    const pricingModel = pricingModelSelect.value;
 
-    const hourly = getHourlyCost(provider, service, instanceType);
-    const daily = calculateDailyCost(hourly);
-    const monthly = calculateMonthlyCost(hourly);
-    const yearly = calculateYearlyCost(hourly);
+    const hourly = await pricingService.getPrice({ provider, service, instanceType, region, os, pricingModel });
+    const daily = pricingService.hourlyToDaily(hourly);
+    const monthly = pricingService.hourlyToMonthly(hourly);
+    const yearly = pricingService.hourlyToYearly(hourly);
 
     hourlyCostField.textContent = formatCurrency(hourly);
     dailyCostField.textContent = formatCurrency(daily);
     monthlyCostField.textContent = formatCurrency(monthly);
     yearlyCostField.textContent = formatCurrency(yearly);
 
-    console.log('[CloudCost] Cost Recalculated', { provider, service, instanceType, hourly, daily, monthly, yearly });
+    // Breakdown fields
+    const onDemand = await pricingService.getPrice({ provider, service, instanceType, region, os, pricingModel: 'on-demand' });
+    const savings = pricingService.calculateSavings(onDemand, hourly);
+    const estMonthlyField = document.getElementById('cct-est-monthly');
+    const estYearlyField = document.getElementById('cct-est-yearly');
+    const savingsField = document.getElementById('cct-savings');
+    if (estMonthlyField) estMonthlyField.textContent = formatCurrency(monthly);
+    if (estYearlyField) estYearlyField.textContent = formatCurrency(yearly);
+    if (savingsField) savingsField.textContent = `${formatCurrency(savings.savingsMonthly)} (${Math.round(savings.percent)}%)`;
+
+    console.log('[CloudCost] Cost Recalculated', { provider, service, instanceType, region, os, pricingModel, hourly, daily, monthly, yearly });
   }
 
   function handleSelectionChange() {
