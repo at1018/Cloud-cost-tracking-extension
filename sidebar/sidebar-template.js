@@ -1,0 +1,79 @@
+export const sidebarTemplate = `
+  <div id="cloud-cost-tracker-sidebar" class="cct-sidebar hidden">
+    <div class="cct-sidebar-header">
+      <h2>Cloud Cost Tracker</h2>
+      <button id="cct-close-btn" class="cct-close-btn" aria-label="Close sidebar">×</button>
+    </div>
+    <div class="cct-sidebar-body">
+      <div class="cct-field-group">
+        <label for="cct-provider">Cloud Provider</label>
+        <select id="cct-provider" class="cct-select">
+          <option value="aws">AWS</option>
+          <option value="gcp">GCP</option>
+        </select>
+      </div>
+      <div class="cct-field-group">
+        <label for="cct-service">Service</label>
+        <select id="cct-service" class="cct-select">
+          <option value="ec2">EC2</option>
+          <option value="rds">RDS</option>
+          <option value="lambda">Lambda</option>
+          <option value="s3">S3</option>
+        </select>
+      </div>
+      <div class="cct-field-group">
+        <label for="cct-region">Region</label>
+        <select id="cct-region" class="cct-select">
+          <option value="us-east-1">us-east-1</option>
+          <option value="us-west-2">us-west-2</option>
+          <option value="eu-west-1">eu-west-1</option>
+          <option value="ap-south-1">ap-south-1</option>
+          <option value="ap-southeast-1">ap-southeast-1</option>
+          <option value="custom">Custom Region</option>
+        </select>
+      </div>
+      <div class="cct-field-group">
+        <label for="cct-os">Operating System</label>
+        <select id="cct-os" class="cct-select">
+          <option value="linux">Linux</option>
+          <option value="windows">Windows</option>
+          <option value="ubuntu-pro">Ubuntu Pro</option>
+          <option value="rhel">RHEL</option>
+          <option value="suse">SUSE</option>
+        </select>
+      </div>
+      <div class="cct-field-group">
+        <label for="cct-pricing-model">Pricing Model</label>
+        <select id="cct-pricing-model" class="cct-select">
+          <option value="on-demand">On Demand</option>
+          <option value="reserved">Reserved</option>
+          <option value="spot">Spot</option>
+          <option value="savings-plan">Savings Plan</option>
+        </select>
+      </div>
+      <div class="cct-field-group">
+        <label for="cct-instance-type">Instance Type</label>
+        <select id="cct-instance-type" class="cct-select"></select>
+      </div>
+      <div class="cct-summary-card">
+        <div class="cct-summary-row">
+          <span>Hourly Cost</span>
+          <strong id="cct-hourly-cost">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span>Daily Cost</span>
+          <strong id="cct-daily-cost">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span>Monthly Cost</span>
+          <strong id="cct-monthly-cost">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span>Yearly Cost</span>
+          <strong id="cct-yearly-cost">$0.00</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="cloud-cost-tracker-launcher" class="cct-launcher">Cloud Cost Tracker</button>
+`;

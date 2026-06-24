@@ -1,0 +1,35 @@
+export const pricingData = {
+  aws: {
+    ec2: {
+      "t3.micro": 0.0104,
+      "t3.small": 0.0208,
+      "t3.medium": 0.0416,
+      "t4g.micro": 0.0084,
+      "m5.large": 0.096,
+      "m6i.large": 0.077,
+      "m6a.large": 0.069,
+      "m6g.large": 0.066,
+      "c5.large": 0.085,
+      "c6i.large": 0.086,
+      "c6a.large": 0.075,
+      "c6g.large": 0.068,
+      "r5.large": 0.126,
+      "r6i.large": 0.113,
+      "r6a.large": 0.101,
+      "r6g.large": 0.094,
+      "m7i.large": 0.119,
+      "m7g.large": 0.109,
+      "c7i.large": 0.129,
+      "c7g.large": 0.112,
+      "r7i.large": 0.152,
+      "r7g.large": 0.138
+    }
+  },
+  gcp: {
+    compute: {
+      "e2-micro": 0.0076,
+      "e2-small": 0.0152,
+      "n1-standard-1": 0.0475
+    }
+  }
+};
