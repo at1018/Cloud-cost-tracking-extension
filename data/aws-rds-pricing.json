@@ -1,6 +1,34 @@
 {
-  "storage_per_gb": {"us-east-1": 0.10, "us-west-2": 0.11, "eu-west-1": 0.12, "ap-south-1": 0.13, "ap-southeast-1": 0.125},
-  "db.t3.micro": {"us-east-1": 0.017, "us-west-2": 0.018, "eu-west-1": 0.019, "ap-south-1": 0.021, "ap-southeast-1": 0.02},
-  "db.t3.small": {"us-east-1": 0.034, "us-west-2": 0.036, "eu-west-1": 0.038, "ap-south-1": 0.043, "ap-southeast-1": 0.041},
-  "db.m5.large": {"us-east-1": 0.192, "us-west-2": 0.201, "eu-west-1": 0.210, "ap-south-1": 0.220, "ap-southeast-1": 0.215}
+  "storage_per_gb": {
+    "us-east-1": 0.10,
+    "us-west-2": 0.11,
+    "eu-west-1": 0.12,
+    "ap-south-1": 0.13,
+    "ap-southeast-1": 0.125
+  },
+  "postgresql": {
+    "db.t3.micro": {"us-east-1": 0.017, "us-west-2": 0.018, "eu-west-1": 0.019, "ap-south-1": 0.021, "ap-southeast-1": 0.020},
+    "db.t3.small": {"us-east-1": 0.034, "us-west-2": 0.036, "eu-west-1": 0.038, "ap-south-1": 0.043, "ap-southeast-1": 0.041},
+    "db.m5.large": {"us-east-1": 0.192, "us-west-2": 0.201, "eu-west-1": 0.210, "ap-south-1": 0.220, "ap-southeast-1": 0.215}
+  },
+  "mysql": {
+    "db.t3.micro": {"us-east-1": 0.016, "us-west-2": 0.017, "eu-west-1": 0.018, "ap-south-1": 0.020, "ap-southeast-1": 0.019},
+    "db.t3.small": {"us-east-1": 0.032, "us-west-2": 0.034, "eu-west-1": 0.036, "ap-south-1": 0.041, "ap-southeast-1": 0.039},
+    "db.m5.large": {"us-east-1": 0.180, "us-west-2": 0.189, "eu-west-1": 0.198, "ap-south-1": 0.207, "ap-southeast-1": 0.205}
+  },
+  "mariadb": {
+    "db.t3.micro": {"us-east-1": 0.016, "us-west-2": 0.017, "eu-west-1": 0.018, "ap-south-1": 0.020, "ap-southeast-1": 0.019},
+    "db.t3.small": {"us-east-1": 0.032, "us-west-2": 0.034, "eu-west-1": 0.036, "ap-south-1": 0.041, "ap-southeast-1": 0.039},
+    "db.m5.large": {"us-east-1": 0.180, "us-west-2": 0.189, "eu-west-1": 0.198, "ap-south-1": 0.207, "ap-southeast-1": 0.205}
+  },
+  "oracle": {
+    "db.t3.micro": {"us-east-1": 0.030, "us-west-2": 0.032, "eu-west-1": 0.035, "ap-south-1": 0.038, "ap-southeast-1": 0.037},
+    "db.t3.small": {"us-east-1": 0.060, "us-west-2": 0.064, "eu-west-1": 0.070, "ap-south-1": 0.076, "ap-southeast-1": 0.074},
+    "db.m5.large": {"us-east-1": 0.340, "us-west-2": 0.357, "eu-west-1": 0.378, "ap-south-1": 0.396, "ap-southeast-1": 0.390}
+  },
+  "sqlserver": {
+    "db.t3.micro": {"us-east-1": 0.040, "us-west-2": 0.042, "eu-west-1": 0.045, "ap-south-1": 0.048, "ap-southeast-1": 0.047},
+    "db.t3.small": {"us-east-1": 0.080, "us-west-2": 0.084, "eu-west-1": 0.090, "ap-south-1": 0.096, "ap-southeast-1": 0.094},
+    "db.m5.large": {"us-east-1": 0.460, "us-west-2": 0.483, "eu-west-1": 0.510, "ap-south-1": 0.532, "ap-southeast-1": 0.525}
+  }
 }

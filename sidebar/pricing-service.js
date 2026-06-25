@@ -70,6 +70,14 @@ export async function getRegionPrice(provider, service, instanceType, region) {
   return entry[region] || entry['us-east-1'] || 0;
 }
 
+export async function getRDSInstancePrice(engine = 'postgresql', instanceClass, region = 'us-east-1') {
+  const rdsData = await loadJSON('data/aws-rds-pricing.json');
+  const engineKey = (engine || 'postgresql').toLowerCase();
+  const engineTable = rdsData[engineKey] || rdsData.postgresql || {};
+  const instanceEntry = engineTable[instanceClass] || {};
+  return instanceEntry[region] || instanceEntry['us-east-1'] || 0;
+}
+
 function safeNumber(v) { return Number(v) || 0; }
 
 export async function calculateEC2Cost({ provider='aws', service='ec2', instanceType, region='us-east-1', os='linux', pricingModel='on-demand' }) {
@@ -86,31 +94,29 @@ export async function calculateEC2Cost({ provider='aws', service='ec2', instance
   return result;
 }
 
-export async function calculateRDSCost({ instanceClass, region='us-east-1', engine='mysql', storageGB=20, pricingModel='on-demand' }) {
-  const computeHourly = await getRegionPrice('aws', 'rds', instanceClass, region);
+export async function calculateRDSCost({ instanceClass, region='us-east-1', engine='postgresql', storageGB=20, pricingModel='on-demand' }) {
+  const baseComputePrice = await getRDSInstancePrice(engine, instanceClass, region);
   const regionMul = REGION_MULTIPLIERS[region] || 1.0;
   const modelMul = PRICING_MODEL_MULTIPLIERS[pricingModel] || 1.0;
-  const computeHourlyAdj = Number(computeHourly) * regionMul * modelMul;
-  // storage price per GB-month from dataset
+  const hourly = Number(baseComputePrice) * regionMul * modelMul;
+  const daily = hourlyToDaily(hourly);
+  const monthlyCompute = hourlyToMonthly(hourly);
   const rdsData = await loadJSON('data/aws-rds-pricing.json');
   const storagePrices = rdsData.storage_per_gb || {};
   const storagePerGB = storagePrices[region] || storagePrices['us-east-1'] || 0;
   const storageMonthly = safeNumber(storageGB) * storagePerGB;
-  const monthlyCompute = hourlyToMonthly(computeHourlyAdj);
   const monthly = monthlyCompute + storageMonthly;
-  const hourly = monthly / (24 * 30.4375);
-  const daily = hourlyToDaily(hourly);
   const yearly = monthly * 12;
   const result = {
     hourly,
     daily,
     monthly,
     yearly,
-    computeHourly: computeHourlyAdj,
-    storagePerGB,
     storageMonthly,
     monthlyCompute,
-    breakdown: { computeHourly: computeHourlyAdj, storageMonthly, regionMul, modelMul }
+    storagePerGB,
+    computeHourly: hourly,
+    breakdown: { computeHourly: hourly, storageMonthly, regionMul, modelMul, engine: engine.toLowerCase(), region }
   };
   console.log('[CloudCost] RDS Cost Result', result);
   return result;

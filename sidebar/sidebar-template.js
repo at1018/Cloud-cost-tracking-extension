@@ -52,9 +52,18 @@ export const sidebarTemplate = `
               <div class="cct-field-group">
                 <label for="cct-rds-engine">Database Engine</label>
                 <select id="cct-rds-engine" class="cct-select">
+                  <option value="postgresql">PostgreSQL</option>
                   <option value="mysql">MySQL</option>
-                  <option value="postgres">PostgreSQL</option>
                   <option value="mariadb">MariaDB</option>
+                  <option value="oracle">Oracle</option>
+                  <option value="sqlserver">SQL Server</option>
+                </select>
+              </div>
+              <div class="cct-field-group" id="cct-rds-pricing-model-group">
+                <label for="cct-rds-pricing-model">Pricing Model</label>
+                <select id="cct-rds-pricing-model" class="cct-select">
+                  <option value="on-demand">On Demand</option>
+                  <option value="reserved">Reserved</option>
                 </select>
               </div>
               <div class="cct-field-group">
@@ -162,6 +171,10 @@ export const sidebarTemplate = `
         <div class="cct-summary-row">
           <span id="cct-breakdown-label-4">Final Monthly Cost</span>
           <strong id="cct-breakdown-value-4">$0.00</strong>
+        </div>
+        <div class="cct-summary-row">
+          <span id="cct-breakdown-label-5">Region</span>
+          <strong id="cct-breakdown-value-5">us-east-1</strong>
         </div>
       </div>
 

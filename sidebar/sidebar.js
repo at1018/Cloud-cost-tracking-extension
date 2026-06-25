@@ -31,19 +31,22 @@ if (!existingSidebar && !existingLauncher) {
 
   const selections = getSavedSelections();
 
-  providerSelect.value = selections.provider || DEFAULT_SELECTIONS.provider;
-  serviceSelect.value = selections.service || DEFAULT_SELECTIONS.service;
-  regionSelect.value = selections.region || DEFAULT_SELECTIONS.region;
-  osSelect.value = selections.os || DEFAULT_SELECTIONS.os;
-  pricingModelSelect.value = selections.pricingModel || DEFAULT_SELECTIONS.pricingModel;
-
   buildInstanceOptions(instanceTypeSelect, INSTANCE_TYPES);
   instanceTypeSelect.value = selections.instanceType || DEFAULT_SELECTIONS.instanceType;
 
   // Service specific elements
   const rdsEngine = document.getElementById('cct-rds-engine');
+  const rdsPricingModelSelect = document.getElementById('cct-rds-pricing-model');
   const rdsInstance = document.getElementById('cct-rds-instance');
   const rdsStorage = document.getElementById('cct-rds-storage');
+
+  providerSelect.value = selections.provider || DEFAULT_SELECTIONS.provider;
+  serviceSelect.value = selections.service || DEFAULT_SELECTIONS.service;
+  regionSelect.value = selections.region || DEFAULT_SELECTIONS.region;
+  osSelect.value = selections.os || DEFAULT_SELECTIONS.os;
+  pricingModelSelect.value = selections.pricingModel || DEFAULT_SELECTIONS.pricingModel;
+  if (rdsEngine) rdsEngine.value = selections.rdsEngine || DEFAULT_SELECTIONS.rdsEngine;
+  if (rdsPricingModelSelect) rdsPricingModelSelect.value = selections.rdsPricingModel || DEFAULT_SELECTIONS.rdsPricingModel;
 
   const lambdaMemory = document.getElementById('cct-lambda-memory');
   const lambdaRequests = document.getElementById('cct-lambda-requests');
@@ -61,6 +64,7 @@ if (!existingSidebar && !existingLauncher) {
   const compareCard = document.querySelector('.cct-compare-card');
   const osGroup = document.getElementById('cct-os-group');
   const pricingModelGroup = document.getElementById('cct-pricing-model-group');
+  const rdsPricingModelGroup = document.getElementById('cct-rds-pricing-model-group');
   const instanceTypeGroup = document.getElementById('cct-instance-type-group');
 
   const compareSelect = document.getElementById('cct-compare-instance');
@@ -75,6 +79,8 @@ if (!existingSidebar && !existingLauncher) {
   const breakdownValue3 = document.getElementById('cct-breakdown-value-3');
   const breakdownLabel4 = document.getElementById('cct-breakdown-label-4');
   const breakdownValue4 = document.getElementById('cct-breakdown-value-4');
+  const breakdownLabel5 = document.getElementById('cct-breakdown-label-5');
+  const breakdownValue5 = document.getElementById('cct-breakdown-value-5');
 
   async function updateCosts() {
     const provider = providerSelect.value;
@@ -105,6 +111,10 @@ if (!existingSidebar && !existingLauncher) {
         breakdownValue3.textContent = '';
         breakdownLabel4.textContent = '';
         breakdownValue4.textContent = '';
+        if (breakdownLabel5 && breakdownValue5) {
+          breakdownLabel5.textContent = '';
+          breakdownValue5.textContent = '';
+        }
       }
       sidebar.classList.remove('loading');
       return;
@@ -118,7 +128,7 @@ if (!existingSidebar && !existingLauncher) {
       } else if (service === 'rds') {
         const rdsInst = rdsInstance.value || instanceType;
         const storageGB = Number(rdsStorage.value || 20);
-        result = await pricingService.calculateRDSCost({ instanceClass: rdsInst, region, engine: rdsEngine.value, storageGB, pricingModel });
+        result = await pricingService.calculateRDSCost({ instanceClass: rdsInst, region, engine: rdsEngine.value, storageGB, pricingModel: rdsPricingModelSelect.value });
       } else if (service === 'lambda') {
         result = await pricingService.calculateLambdaCost({ region, memoryMB: Number(lambdaMemory.value), requestsPerMonth: Number(lambdaRequests.value), avgDurationMs: Number(lambdaDuration.value) });
       } else if (service === 's3') {
@@ -185,15 +195,23 @@ if (!existingSidebar && !existingLauncher) {
           breakdownValue3.textContent = result.breakdown.osMul.toFixed(2);
           breakdownLabel4.textContent = 'Pricing Model Multiplier';
           breakdownValue4.textContent = result.breakdown.modelMul.toFixed(2);
+          if (breakdownLabel5 && breakdownValue5) {
+            breakdownLabel5.textContent = '';
+            breakdownValue5.textContent = '';
+          }
         } else if (service === 'rds') {
-          breakdownLabel1.textContent = 'Compute Cost';
-          breakdownValue1.textContent = formatCurrency(result.breakdown.computeHourly);
+          breakdownLabel1.textContent = 'Base Compute Cost';
+          breakdownValue1.textContent = formatCurrency(result.monthlyCompute);
           breakdownLabel2.textContent = 'Storage Cost';
-          breakdownValue2.textContent = formatCurrency(result.breakdown.storageMonthly);
-          breakdownLabel3.textContent = 'Region Multiplier';
-          breakdownValue3.textContent = result.breakdown.regionMul.toFixed(2);
-          breakdownLabel4.textContent = 'Pricing Model Multiplier';
-          breakdownValue4.textContent = result.breakdown.modelMul.toFixed(2);
+          breakdownValue2.textContent = formatCurrency(result.storageMonthly);
+          breakdownLabel3.textContent = 'Engine';
+          breakdownValue3.textContent = rdsEngine.value.charAt(0).toUpperCase() + rdsEngine.value.slice(1);
+          breakdownLabel4.textContent = 'Pricing Model';
+          breakdownValue4.textContent = rdsPricingModelSelect.value === 'reserved' ? 'Reserved' : 'On Demand';
+          if (breakdownLabel5 && breakdownValue5) {
+            breakdownLabel5.textContent = 'Region';
+            breakdownValue5.textContent = region;
+          }
         } else if (service === 'lambda') {
           breakdownLabel1.textContent = 'Compute Cost';
           breakdownValue1.textContent = formatCurrency(result.computeCost);
@@ -232,6 +250,8 @@ if (!existingSidebar && !existingLauncher) {
       region: regionSelect.value,
       os: osSelect.value,
       pricingModel: pricingModelSelect.value,
+      rdsEngine: rdsEngine.value,
+      rdsPricingModel: rdsPricingModelSelect.value,
       instanceType: instanceTypeSelect.value
     });
   }
@@ -261,6 +281,10 @@ if (!existingSidebar && !existingLauncher) {
       }
       if (!validatePositiveNumber(rdsStorage.value)) {
         showInlineError(rdsStorage, 'Storage must be a positive number');
+        valid = false;
+      }
+      if (!rdsPricingModelSelect.value) {
+        showInlineError(rdsPricingModelSelect, 'Select an RDS pricing model');
         valid = false;
       }
     }
@@ -307,7 +331,8 @@ if (!existingSidebar && !existingLauncher) {
     compareCard && compareCard.classList.toggle('hidden', service !== 'ec2');
 
     osGroup && osGroup.classList.toggle('hidden', service !== 'ec2');
-    pricingModelGroup && pricingModelGroup.classList.toggle('hidden', service === 'lambda' || service === 's3');
+    pricingModelGroup && pricingModelGroup.classList.toggle('hidden', service !== 'ec2');
+    rdsPricingModelGroup && rdsPricingModelGroup.classList.toggle('hidden', service !== 'rds');
     instanceTypeGroup && instanceTypeGroup.classList.toggle('hidden', service !== 'ec2');
 
     console.log('[CloudCost] Service Visibility Updated:', service);
@@ -317,13 +342,14 @@ if (!existingSidebar && !existingLauncher) {
     updateServiceVisibility(serviceSelect.value);
   }
   // populate RDS instance options from dataset
-  async function populateRDSInstances() {
+  async function populateRDSInstances(engine = 'postgresql') {
     try {
       const runtimeBase = getRuntimeBase();
       const url = runtimeBase + 'data/aws-rds-pricing.json';
 
       console.log('[CloudCost] Runtime Base:', runtimeBase);
       console.log('[CloudCost] RDS URL:', url);
+      console.log('[CloudCost] RDS Engine:', engine);
 
       const response = await fetch(url);
       if (!response.ok) {
@@ -331,16 +357,16 @@ if (!existingSidebar && !existingLauncher) {
       }
 
       const json = await response.json();
-      const keys = Object.keys(json).filter(
-        (key) => !key.startsWith('storage_per_gb')
-      );
+      const engineKey = engine.toLowerCase();
+      const enginePrices = json[engineKey] || json.postgresql || {};
+      const keys = Object.keys(enginePrices);
 
       buildInstanceOptions(rdsInstance, keys);
       if (!rdsInstance.value) {
         rdsInstance.value = keys[0] || '';
       }
 
-      console.log('[CloudCost] RDS instances loaded:', keys.length);
+      console.log('[CloudCost] RDS instances loaded:', keys.length, 'for engine', engineKey);
     } catch (err) {
       console.error('[CloudCost] failed to load rds instances', err);
     }
@@ -413,8 +439,12 @@ if (!existingSidebar && !existingLauncher) {
     handleSelectionChange();
   });
 
-  rdsEngine && rdsEngine.addEventListener('change', handleSelectionChange);
+  rdsEngine && rdsEngine.addEventListener('change', async () => {
+    await populateRDSInstances(rdsEngine.value);
+    handleSelectionChange();
+  });
   rdsInstance && rdsInstance.addEventListener('change', handleSelectionChange);
+  rdsPricingModelSelect && rdsPricingModelSelect.addEventListener('change', handleSelectionChange);
   rdsStorage && rdsStorage.addEventListener('input', () => {
     if (!validatePositiveNumber(rdsStorage.value)) showInlineError(rdsStorage, 'Storage must be a positive number'); else clearInlineError(rdsStorage);
     handleSelectionChange();
@@ -432,7 +462,7 @@ if (!existingSidebar && !existingLauncher) {
 
   // initial render and populate
   updateServiceVisibility(serviceSelect.value);
-  populateRDSInstances();
+  populateRDSInstances(rdsEngine ? rdsEngine.value : 'postgresql');
 
   // function openSidebar() {
   //   sidebar.classList.add('visible');
@@ -478,6 +508,8 @@ if (!existingSidebar && !existingLauncher) {
           regionSelect.value = items.region || regionSelect.value;
           osSelect.value = items.os || osSelect.value;
           pricingModelSelect.value = items.pricingModel || pricingModelSelect.value;
+          if (rdsEngine) rdsEngine.value = items.rdsEngine || rdsEngine.value;
+          if (rdsPricingModelSelect) rdsPricingModelSelect.value = items.rdsPricingModel || rdsPricingModelSelect.value;
           instanceTypeSelect.value = items.instanceType || instanceTypeSelect.value;
           updateCosts();
         }

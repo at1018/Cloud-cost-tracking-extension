@@ -4,6 +4,8 @@ export const DEFAULT_SELECTIONS = {
   region: 'us-east-1',
   os: 'linux',
   pricingModel: 'on-demand',
+  rdsEngine: 'postgresql',
+  rdsPricingModel: 'on-demand',
   instanceType: 't3.micro'
 };
 
