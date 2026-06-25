@@ -84,6 +84,15 @@ if (!existingSidebar && !existingLauncher) {
   const breakdownValue4 = document.getElementById('cct-breakdown-value-4');
   const breakdownLabel5 = document.getElementById('cct-breakdown-label-5');
   const breakdownValue5 = document.getElementById('cct-breakdown-value-5');
+  const breakdownRow6 = document.getElementById('cct-breakdown-row-6');
+  const breakdownLabel6 = document.getElementById('cct-breakdown-label-6');
+  const breakdownValue6 = document.getElementById('cct-breakdown-value-6');
+  const breakdownRow7 = document.getElementById('cct-breakdown-row-7');
+  const breakdownLabel7 = document.getElementById('cct-breakdown-label-7');
+  const breakdownValue7 = document.getElementById('cct-breakdown-value-7');
+  const savingsYearlyRow = document.getElementById('cct-s3-savings-yearly-row');
+  const savingsYearly = document.getElementById('cct-savings-yearly');
+  const savingsLabel = document.getElementById('cct-savings-label');
 
   async function updateCosts() {
     const provider = providerSelect.value;
@@ -155,19 +164,45 @@ if (!existingSidebar && !existingLauncher) {
       if (estMonthlyField) estMonthlyField.textContent = formatCurrency(monthly);
       if (estYearlyField) estYearlyField.textContent = formatCurrency(yearly);
       if (savingsField) {
-        const onDemandModel = 'on-demand';
-        const onDemandResult =
-          service === 'rds'
-            ? await pricingService.calculateRDSCost({ instanceClass: rdsInstance.value || instanceType, region, engine: rdsEngine.value, storageGB: Number(rdsStorage.value || 20), pricingModel: onDemandModel })
-            : service === 'ec2'
-            ? await pricingService.calculateEC2Cost({ provider, service: 'ec2', instanceType, region, os, pricingModel: onDemandModel })
-            : null;
-
-        if (onDemandResult) {
-          const savingsObj = pricingService.calculateSavings(onDemandResult.hourly, hourly);
-          savingsField.textContent = `${formatCurrency(savingsObj.savingsMonthly)} (${Math.round(savingsObj.percent)}%)`;
+        if (service === 's3') {
+          const standardResult = await pricingService.calculateS3Cost({ storageClass: 's3-standard', region, storageGB: Number(s3Storage.value), putRequests: Number(s3Put.value), getRequests: Number(s3Get.value) });
+          const monthlySavings = standardResult.monthly - monthly;
+          const yearlySavings = standardResult.yearly - yearly;
+          savingsField.textContent = formatCurrency(monthlySavings);
+          if (savingsLabel) {
+            savingsLabel.textContent = 'Monthly Savings vs Standard';
+          }
+          if (savingsYearly) {
+            savingsYearly.textContent = formatCurrency(yearlySavings);
+          }
+          if (savingsYearlyRow) {
+            savingsYearlyRow.classList.toggle('hidden', false);
+          }
+          console.log('[CloudCost] S3 Savings Calculated', { storageClass: s3Tier.value, region, storageGB: Number(s3Storage.value), putRequests: Number(s3Put.value), getRequests: Number(s3Get.value), monthlySavings, yearlySavings });
         } else {
-          savingsField.textContent = `-`;
+          const onDemandModel = 'on-demand';
+          const onDemandResult =
+            service === 'rds'
+              ? await pricingService.calculateRDSCost({ instanceClass: rdsInstance.value || instanceType, region, engine: rdsEngine.value, storageGB: Number(rdsStorage.value || 20), pricingModel: onDemandModel })
+              : service === 'ec2'
+              ? await pricingService.calculateEC2Cost({ provider, service: 'ec2', instanceType, region, os, pricingModel: onDemandModel })
+              : null;
+
+          if (onDemandResult) {
+            const savingsObj = pricingService.calculateSavings(onDemandResult.hourly, hourly);
+            savingsField.textContent = `${formatCurrency(savingsObj.savingsMonthly)} (${Math.round(savingsObj.percent)}%)`;
+          } else {
+            savingsField.textContent = `-`;
+          }
+          if (savingsYearlyRow) {
+            savingsYearlyRow.classList.toggle('hidden', true);
+          }
+          if (savingsYearly) {
+            savingsYearly.textContent = '$0.00';
+          }
+          if (savingsLabel) {
+            savingsLabel.textContent = 'Savings vs On-Demand';
+          }
         }
       }
 
@@ -227,12 +262,26 @@ if (!existingSidebar && !existingLauncher) {
         } else if (service === 's3') {
           breakdownLabel1.textContent = 'Storage Cost';
           breakdownValue1.textContent = formatCurrency(result.storageCost);
-          breakdownLabel2.textContent = 'PUT Requests';
+          breakdownLabel2.textContent = 'PUT Request Cost';
           breakdownValue2.textContent = formatCurrency(result.putCost);
-          breakdownLabel3.textContent = 'GET Requests';
+          breakdownLabel3.textContent = 'GET Request Cost';
           breakdownValue3.textContent = formatCurrency(result.getCost);
           breakdownLabel4.textContent = 'Storage Tier';
-          breakdownValue4.textContent = s3Tier.value;
+          breakdownValue4.textContent = s3Tier.selectedOptions?.[0]?.textContent || s3Tier.value;
+          if (breakdownLabel5 && breakdownValue5) {
+            breakdownLabel5.textContent = 'Region';
+            breakdownValue5.textContent = region;
+          }
+          if (breakdownRow6 && breakdownLabel6 && breakdownValue6) {
+            breakdownRow6.classList.remove('hidden');
+            breakdownLabel6.textContent = 'Total Monthly Cost';
+            breakdownValue6.textContent = formatCurrency(result.monthly);
+          }
+          if (breakdownRow7 && breakdownLabel7 && breakdownValue7) {
+            breakdownRow7.classList.remove('hidden');
+            breakdownLabel7.textContent = 'Total Yearly Cost';
+            breakdownValue7.textContent = formatCurrency(result.yearly);
+          }
         }
       }
 
@@ -278,7 +327,7 @@ if (!existingSidebar && !existingLauncher) {
     }
 
     if (serviceSelect.value === 'rds') {
-      if (!rdsInstance.value) {
+      if (!rdsInstance.value || rdsInstance.value.trim() === '') {
         showInlineError(rdsInstance, 'Select an RDS instance class');
         valid = false;
       }
@@ -352,6 +401,16 @@ if (!existingSidebar && !existingLauncher) {
       rdsNote.classList.toggle('hidden', service !== 'rds');
     }
 
+    if (savingsYearlyRow) {
+      savingsYearlyRow.classList.toggle('hidden', service !== 's3');
+    }
+    if (breakdownRow6) {
+      breakdownRow6.classList.toggle('hidden', service !== 's3');
+    }
+    if (breakdownRow7) {
+      breakdownRow7.classList.toggle('hidden', service !== 's3');
+    }
+
     console.log('[CloudCost] Service Visibility Updated:', service);
   }
 
@@ -379,8 +438,10 @@ if (!existingSidebar && !existingLauncher) {
       const keys = Object.keys(enginePrices);
 
       buildInstanceOptions(rdsInstance, keys);
-      if (!rdsInstance.value) {
-        rdsInstance.value = keys[0] || '';
+      if (keys.length > 0) {
+        rdsInstance.value = keys[0];
+        console.log('[CloudCost] RDS Instance Selected:', rdsInstance.value);
+        updateCosts();
       }
 
       console.log('[CloudCost] RDS instances loaded:', keys.length, 'for engine', engineKey);
@@ -473,7 +534,10 @@ if (!existingSidebar && !existingLauncher) {
   s3Storage && s3Storage.addEventListener('input', () => { if (!validatePositiveNumber(s3Storage.value)) showInlineError(s3Storage, 'Storage must be positive'); else clearInlineError(s3Storage); handleSelectionChange(); });
   s3Put && s3Put.addEventListener('input', () => { if (!validatePositiveNumber(s3Put.value)) showInlineError(s3Put, 'Request count invalid'); else clearInlineError(s3Put); handleSelectionChange(); });
   s3Get && s3Get.addEventListener('input', () => { if (!validatePositiveNumber(s3Get.value)) showInlineError(s3Get, 'Request count invalid'); else clearInlineError(s3Get); handleSelectionChange(); });
-  s3Tier && s3Tier.addEventListener('change', handleSelectionChange);
+  s3Tier && s3Tier.addEventListener('change', () => {
+    console.log('[CloudCost] S3 Tier Changed', s3Tier.value);
+    handleSelectionChange();
+  });
 
   compareSelect && compareSelect.addEventListener('change', handleSelectionChange);
 

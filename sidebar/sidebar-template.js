@@ -108,7 +108,12 @@ export const sidebarTemplate = `
                 <label for="cct-s3-tier">Storage Tier</label>
                 <select id="cct-s3-tier" class="cct-select">
                   <option value="s3-standard">Standard</option>
-                  <option value="s3-infrequent">Infrequent</option>
+                  <option value="s3-standard-ia">Standard-IA</option>
+                  <option value="s3-onezone-ia">One Zone-IA</option>
+                  <option value="s3-intelligent-tiering">Intelligent Tiering</option>
+                  <option value="s3-glacier-instant-retrieval">Glacier Instant Retrieval</option>
+                  <option value="s3-glacier-flexible-retrieval">Glacier Flexible Retrieval</option>
+                  <option value="s3-glacier-deep-archive">Glacier Deep Archive</option>
                 </select>
               </div>
             </div>
@@ -156,8 +161,12 @@ export const sidebarTemplate = `
           <strong id="cct-est-yearly">$0.00</strong>
         </div>
         <div class="cct-summary-row">
-          <span>Savings vs On-Demand</span>
-          <strong id="cct-savings">$0.00 (0%)</strong>
+          <span id="cct-savings-label">Savings vs On-Demand</span>
+          <strong id="cct-savings">$0.00</strong>
+        </div>
+        <div id="cct-s3-savings-yearly-row" class="cct-summary-row hidden">
+          <span id="cct-savings-yearly-label">Yearly Savings vs Standard</span>
+          <strong id="cct-savings-yearly">$0.00</strong>
         </div>
         <div class="cct-summary-row">
           <span id="cct-breakdown-label-1">Detail 1</span>
@@ -178,6 +187,14 @@ export const sidebarTemplate = `
         <div class="cct-summary-row">
           <span id="cct-breakdown-label-5">Region</span>
           <strong id="cct-breakdown-value-5">us-east-1</strong>
+        </div>
+        <div class="cct-summary-row hidden" id="cct-breakdown-row-6">
+          <span id="cct-breakdown-label-6">Detail 6</span>
+          <strong id="cct-breakdown-value-6">$0.00</strong>
+        </div>
+        <div class="cct-summary-row hidden" id="cct-breakdown-row-7">
+          <span id="cct-breakdown-label-7">Detail 7</span>
+          <strong id="cct-breakdown-value-7">$0.00</strong>
         </div>
       </div>
 
