@@ -1,4 +1,5 @@
 {
+  "storage_per_gb": {"us-east-1": 0.10, "us-west-2": 0.11, "eu-west-1": 0.12, "ap-south-1": 0.13, "ap-southeast-1": 0.125},
   "db.t3.micro": {"us-east-1": 0.017, "us-west-2": 0.018, "eu-west-1": 0.019, "ap-south-1": 0.021, "ap-southeast-1": 0.02},
   "db.t3.small": {"us-east-1": 0.034, "us-west-2": 0.036, "eu-west-1": 0.038, "ap-south-1": 0.043, "ap-southeast-1": 0.041},
   "db.m5.large": {"us-east-1": 0.192, "us-west-2": 0.201, "eu-west-1": 0.210, "ap-south-1": 0.220, "ap-southeast-1": 0.215}

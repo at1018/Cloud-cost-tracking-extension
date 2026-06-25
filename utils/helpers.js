@@ -34,5 +34,29 @@ export function saveSelections(values) {
 }
 
 export function formatCurrency(value) {
-  return `$${value.toFixed(4)}`;
+  const num = Number(value) || 0;
+  return `$${num.toFixed(4)}`;
+}
+
+export function validatePositiveNumber(value) {
+  const n = Number(value);
+  if (Number.isNaN(n) || n < 0) return false;
+  return true;
+}
+
+export function showInlineError(el, msg) {
+  if (!el) return;
+  let err = el.parentElement.querySelector('.cct-error');
+  if (!err) {
+    err = document.createElement('div');
+    err.className = 'cct-error';
+    el.parentElement.appendChild(err);
+  }
+  err.textContent = msg;
+}
+
+export function clearInlineError(el) {
+  if (!el) return;
+  const err = el.parentElement.querySelector('.cct-error');
+  if (err) err.remove();
 }

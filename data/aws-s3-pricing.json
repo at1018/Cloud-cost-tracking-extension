@@ -1,4 +1,5 @@
 {
   "s3-standard": {"us-east-1": 0.023, "us-west-2": 0.024, "eu-west-1": 0.025, "ap-south-1": 0.026, "ap-southeast-1": 0.026},
-  "s3-infrequent": {"us-east-1": 0.0125, "us-west-2": 0.013, "eu-west-1": 0.0135, "ap-south-1": 0.014, "ap-southeast-1": 0.0138}
+  "s3-infrequent": {"us-east-1": 0.0125, "us-west-2": 0.013, "eu-west-1": 0.0135, "ap-south-1": 0.014, "ap-southeast-1": 0.0138},
+  "request_prices": {"PUT_per_1000": 0.005, "GET_per_1000": 0.0004}
 }

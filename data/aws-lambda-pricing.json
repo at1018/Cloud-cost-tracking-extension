@@ -1,3 +1,4 @@
 {
-  "lambda": {"us-east-1": 0.00001667, "us-west-2": 0.0000175, "eu-west-1": 0.000018, "ap-south-1": 0.00002, "ap-southeast-1": 0.000019}
+  "lambda": {"us-east-1": 0.00001667, "us-west-2": 0.0000175, "eu-west-1": 0.000018, "ap-south-1": 0.00002, "ap-southeast-1": 0.000019},
+  "request_price": 0.0000002
 }

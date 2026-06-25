@@ -3,7 +3,8 @@
   "name": "Cloud Cost Tracker",
   "description": "A sidebar calculator for cloud compute costs.",
   "version": "1.0.0",
-  "permissions": ["storage"],
+  "permissions": ["storage", "scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },

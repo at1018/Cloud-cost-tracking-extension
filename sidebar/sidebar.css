@@ -114,6 +114,24 @@
   display: none !important;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.cct-loading {
+  opacity: 0.6;
+}
+
+.loading {
+  opacity: 0.6;
+}
+
+.cct-error {
+  margin-top: 8px;
+  color: #fda4af;
+  font-size: 0.85rem;
+}
+
 @media (max-width: 520px) {
   .cct-sidebar {
     width: 100%;
