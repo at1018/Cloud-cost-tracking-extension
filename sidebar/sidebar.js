@@ -391,6 +391,9 @@ if (!existingSidebar && !existingLauncher) {
       if (service === 'rds') {
         hourlyLabel.textContent = 'Hourly Cost (Compute)';
         dailyLabel.textContent = 'Daily Cost (Compute)';
+      } else if (service === 's3') {
+        hourlyLabel.textContent = 'Estimated Hourly Equivalent';
+        dailyLabel.textContent = 'Estimated Daily Equivalent';
       } else {
         hourlyLabel.textContent = 'Hourly Cost';
         dailyLabel.textContent = 'Daily Cost';
