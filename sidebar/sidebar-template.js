@@ -126,11 +126,11 @@ export const sidebarTemplate = `
       </div>
       <div class="cct-summary-card">
         <div class="cct-summary-row">
-          <span>Hourly Cost</span>
+          <span id="cct-hourly-label">Hourly Cost</span>
           <strong id="cct-hourly-cost">$0.00</strong>
         </div>
         <div class="cct-summary-row">
-          <span>Daily Cost</span>
+          <span id="cct-daily-label">Daily Cost</span>
           <strong id="cct-daily-cost">$0.00</strong>
         </div>
         <div class="cct-summary-row">
@@ -141,6 +141,9 @@ export const sidebarTemplate = `
           <span>Yearly Cost</span>
           <strong id="cct-yearly-cost">$0.00</strong>
         </div>
+      </div>
+      <div id="cct-rds-note" class="cct-note hidden">
+        Storage costs are billed monthly and are included in Monthly and Yearly estimates.
       </div>
       <div class="cct-breakdown-card">
         <h3>Cost Breakdown</h3>

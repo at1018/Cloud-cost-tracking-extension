@@ -24,10 +24,13 @@ if (!existingSidebar && !existingLauncher) {
   const osSelect = document.getElementById('cct-os');
   const pricingModelSelect = document.getElementById('cct-pricing-model');
   const instanceTypeSelect = document.getElementById('cct-instance-type');
+  const hourlyLabel = document.getElementById('cct-hourly-label');
   const hourlyCostField = document.getElementById('cct-hourly-cost');
+  const dailyLabel = document.getElementById('cct-daily-label');
   const dailyCostField = document.getElementById('cct-daily-cost');
   const monthlyCostField = document.getElementById('cct-monthly-cost');
   const yearlyCostField = document.getElementById('cct-yearly-cost');
+  const rdsNote = document.getElementById('cct-rds-note');
 
   const selections = getSavedSelections();
 
@@ -334,6 +337,20 @@ if (!existingSidebar && !existingLauncher) {
     pricingModelGroup && pricingModelGroup.classList.toggle('hidden', service !== 'ec2');
     rdsPricingModelGroup && rdsPricingModelGroup.classList.toggle('hidden', service !== 'rds');
     instanceTypeGroup && instanceTypeGroup.classList.toggle('hidden', service !== 'ec2');
+
+    if (hourlyLabel && dailyLabel) {
+      if (service === 'rds') {
+        hourlyLabel.textContent = 'Hourly Cost (Compute)';
+        dailyLabel.textContent = 'Daily Cost (Compute)';
+      } else {
+        hourlyLabel.textContent = 'Hourly Cost';
+        dailyLabel.textContent = 'Daily Cost';
+      }
+    }
+
+    if (rdsNote) {
+      rdsNote.classList.toggle('hidden', service !== 'rds');
+    }
 
     console.log('[CloudCost] Service Visibility Updated:', service);
   }
